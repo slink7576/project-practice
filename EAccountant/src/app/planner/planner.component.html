@@ -1,0 +1,43 @@
+<ActionBar>
+	<Label text="Expenses planner"></Label>
+</ActionBar>
+
+<GridLayout rows="*,auto">
+	<ListView [items]="expenses" col="0" row="0">
+		<ng-template let-expense="item" let-i="index">
+			<GridLayout columns="*,*,*,*" rows="auto" (tap)="onItemTap(i)">
+				<Label
+					[text]="expense.name"
+					col="0"
+					row="0"
+					textAlignment="center"
+				></Label>
+				<Label
+					[text]="expense.category"
+					col="1"
+					row="0"
+					textAlignment="center"
+				></Label>
+				<Label
+					[text]="expense.sum"
+					col="2"
+					row="0"
+					textAlignment="center"
+				></Label>
+				<Switch
+					checked="false"
+					(checkedChange)="onCheckedChange($event)"
+					col="3"
+					row="0"
+				></Switch>
+			</GridLayout>
+		</ng-template>
+	</ListView>
+	<Button
+		text="Add expense point"
+		(tap)="onAddExpense()"
+		class="-primary"
+		col="0"
+		row="1"
+	></Button>
+</GridLayout>
