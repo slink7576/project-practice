@@ -1,0 +1,15 @@
+{
+	"version": 1,
+	"cli": {
+		"defaultCollection": "@nativescript/schematics"
+	},
+	"projects": {
+		"tab-navigation": {
+			"root": "",
+			"sourceRoot": "src",
+			"projectType": "application",
+			"prefix": "ns"
+		}
+	},
+	"defaultProject": "tab-navigation"
+}
