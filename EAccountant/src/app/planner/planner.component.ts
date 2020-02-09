@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GestureEventData } from 'tns-core-modules/ui/gestures';
-import { FinancialDataService } from '../shared/financialData.service';
+import { UserDataService } from '../shared/userData.service';
 import { Expense } from '../shared/models/expense.model';
 import { Subscription } from 'rxjs';
 import {
@@ -12,7 +12,7 @@ import {
 	PromptResult,
 	action
 } from 'tns-core-modules/ui/dialogs';
-import { CategoryType } from '../shared/categoryType';
+import { CategoryType } from '../shared/models/categoryType';
 
 @Component({
 	selector: 'ns-planner',
@@ -23,15 +23,15 @@ export class PlannerComponent implements OnInit, OnDestroy {
 	expenses: Expense[];
 	subscription: Subscription;
 
-	constructor(private financialDataService: FinancialDataService) {}
+	constructor(private userDataService: UserDataService) {}
 
 	ngOnInit() {
-		this.subscription = this.financialDataService.expensesChanged.subscribe(
+		this.subscription = this.userDataService.expensesChanged.subscribe(
 			(expenses: Expense[]) => {
 				this.expenses = expenses;
 			}
 		);
-		this.expenses = this.financialDataService.getExpenses();
+		this.expenses = this.userDataService.getExpenses();
 	}
 
 	onItemTap(index: number) {
@@ -44,7 +44,7 @@ export class PlannerComponent implements OnInit, OnDestroy {
 		confirm(options).then((result: boolean) => {
 			if (result === true) {
 				// console.log(index);
-				this.financialDataService.deleteExpense(index);
+				this.userDataService.deleteExpense(index);
 			}
 		});
 	}
@@ -108,7 +108,7 @@ export class PlannerComponent implements OnInit, OnDestroy {
 					}
 
 					const expense = new Expense(name, category, sum);
-					this.financialDataService.addExpense(expense);
+					this.userDataService.addExpense(expense);
 				});
 			});
 		});

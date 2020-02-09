@@ -1,15 +1,56 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { UserDataService } from '../shared/userData.service';
+import { Subscription } from 'rxjs';
+import {
+	prompt,
+	inputType,
+	PromptOptions,
+	capitalizationType,
+	PromptResult
+} from 'tns-core-modules/ui/dialogs/dialogs';
 
 @Component({
-  selector: 'ns-account',
-  templateUrl: './account.component.html',
-  styleUrls: ['./account.component.css']
+	selector: 'ns-account',
+	templateUrl: './account.component.html',
+	styleUrls: ['./account.component.css']
 })
-export class AccountComponent implements OnInit {
+export class AccountComponent implements OnInit, OnDestroy {
+	surname: string;
 
-  constructor() { }
+	income: number;
+	incomeSubscription: Subscription;
 
-  ngOnInit() {
-  }
+	constructor(private userDataService: UserDataService) {}
 
+	ngOnInit() {
+		this.surname = this.userDataService.surname;
+		this.incomeSubscription = this.userDataService.incomeChanged.subscribe(
+			(income: number) => {
+				this.income = income;
+			}
+		);
+		this.income = this.userDataService.income;
+	}
+
+	onChangeIncome() {
+		let options: PromptOptions = {
+			title: 'Enter new income value:',
+			defaultText: '0',
+			okButtonText: 'OK',
+			cancelButtonText: 'Cancel',
+			cancelable: true,
+			inputType: inputType.number, // email, number, text, password, or email
+			capitalizationType: capitalizationType.sentences // all. none, sentences or words
+		};
+
+		prompt(options).then((response: PromptResult) => {
+			if (response.result) {
+				this.userDataService.income = +response.text;
+			}
+		});
+	}
+
+	ngOnDestroy() {
+		this.incomeSubscription.unsubscribe();
+	}
 }

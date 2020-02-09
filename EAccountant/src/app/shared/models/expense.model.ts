@@ -1,4 +1,4 @@
-import { CategoryType } from '../categoryType';
+import { CategoryType } from './categoryType';
 
 export class Expense {
 	constructor(

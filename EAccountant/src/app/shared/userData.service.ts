@@ -1,12 +1,32 @@
 import { Injectable } from '@angular/core';
 import { Expense } from './models/expense.model';
 import { Subject } from 'rxjs';
-import { CategoryType } from './categoryType';
+import { CategoryType } from './models/categoryType';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class FinancialDataService {
+export class UserDataService {
+	//surname
+	public _surname = 'Default User';
+	get surname() {
+		return this._surname;
+	}
+	set surname(value: string) {
+		this._surname = value;
+	}
+	//income
+	private _income: number = 1000;
+	incomeChanged = new Subject<number>();
+
+	get income() {
+		return this._income;
+	}
+	set income(value: number) {
+		this._income = value;
+		this.incomeChanged.next(this.income);
+	}
+	//expenses
 	private expenses: Expense[] = [
 		new Expense('Burger', CategoryType.Food, 25),
 		new Expense('Jacket', CategoryType.Cloth, 500),
@@ -17,17 +37,6 @@ export class FinancialDataService {
 
 	expensesChangedNotifier() {
 		this.expensesChanged.next(this.expenses.slice());
-	}
-
-	private _income: number = 0;
-	incomeChanged = new Subject<number>();
-
-	get income() {
-		return this._income;
-	}
-	set income(value: number) {
-		this._income = value;
-		this.incomeChanged.next(this.income);
 	}
 
 	setExpenses(expenses: Expense[]) {
