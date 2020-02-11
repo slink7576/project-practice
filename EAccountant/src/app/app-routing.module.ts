@@ -10,7 +10,6 @@ const routes: Routes = [
 			'/(profileTab:profile/default//plannerTab:planner/default//statisticTab:statistic/default)',
 		pathMatch: 'full'
 	},
-
 	{
 		path: 'profile',
 		component: NSEmptyOutletComponent,

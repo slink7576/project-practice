@@ -2,16 +2,22 @@
 	<Label text="Personal profile"></Label>
 </ActionBar>
 
-<GridLayout rows="*,*,*,6*" columns="*,*">
+<GridLayout rows="*,*,auto,4*" columns="*,*">
 	<Label text="Surname: " row="0" col="0"></Label>
 	<Label [text]="surname" row="0" col="1"></Label>
 	<Label text="Income: " row="1" col="0"></Label>
 	<Label [text]="income" row="1" col="1"></Label>
-	<Button
-		text="Change income"
-		(tap)="onChangeIncome()"
-		class="-primary"
-		row="2"
-		colspan="2"
-	></Button>
+	<StackLayout row="2" colspan="2">
+		<Button
+			text="Change surname"
+			(tap)="onChangeSurname()"
+			class="-primary"
+		></Button>
+		<Button
+			text="Change income"
+			(tap)="onChangeIncome()"
+			class="-primary"
+		></Button>
+		<Button text="Exit" (tap)="onExit()" class="-primary"></Button>
+	</StackLayout>
 </GridLayout>

@@ -8,6 +8,7 @@ import {
 	capitalizationType,
 	PromptResult
 } from 'tns-core-modules/ui/dialogs/dialogs';
+import { exit } from 'nativescript-exit';
 
 @Component({
 	selector: 'ns-account',
@@ -48,6 +49,29 @@ export class AccountComponent implements OnInit, OnDestroy {
 				this.userDataService.income = +response.text;
 			}
 		});
+	}
+
+	onChangeSurname() {
+		let options: PromptOptions = {
+			title: 'Enter new surname:',
+			defaultText: 'User',
+			okButtonText: 'OK',
+			cancelButtonText: 'Cancel',
+			cancelable: true,
+			inputType: inputType.text, // email, number, text, password, or email
+			capitalizationType: capitalizationType.sentences // all. none, sentences or words
+		};
+
+		prompt(options).then((response: PromptResult) => {
+			if (response.result) {
+				this.surname = response.text;
+				this.userDataService.surname = this.surname;
+			}
+		});
+	}
+
+	onExit() {
+		exit();
 	}
 
 	ngOnDestroy() {

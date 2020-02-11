@@ -32,12 +32,31 @@ export class StatisticComponent implements OnInit, OnDestroy {
 		this.statisticDataSubscription = this.userDataService.expensesChanged.subscribe(
 			(expenses: Expense[]) => {
 				this.statisticData = this.generateStatistic(expenses);
+				//expensesTotal setup
+				this.expensesTotal = 0;
+				this.statisticData.forEach(element => {
+					this.expensesTotal += element.sum;
+				});
+
+				this.calculatedFieldsSetup();
 			}
 		);
 		this.statisticData = this.generateStatistic(
 			this.userDataService.getExpenses()
 		);
 
+		this.calculatedFieldsSetup();
+
+		//income setup
+		this.incomeSubscription = this.userDataService.incomeChanged.subscribe(
+			(income: number) => {
+				this.income = income;
+			}
+		);
+		this.income = this.userDataService.income;
+	}
+
+	calculatedFieldsSetup() {
 		//expensesTotal setup
 		this.expensesTotal = 0;
 		this.statisticData.forEach(element => {
@@ -50,14 +69,6 @@ export class StatisticComponent implements OnInit, OnDestroy {
 			return b.sum - a.sum;
 		});
 		this.mostSpendCategory = arr[0].category.toString().toLowerCase();
-
-		//income setup
-		this.incomeSubscription = this.userDataService.incomeChanged.subscribe(
-			(income: number) => {
-				this.income = income;
-			}
-		);
-		this.income = this.userDataService.income;
 	}
 
 	private generateStatistic(expenses: Expense[]) {
