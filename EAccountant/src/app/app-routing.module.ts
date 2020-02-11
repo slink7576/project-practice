@@ -7,16 +7,15 @@ const routes: Routes = [
 	{
 		path: '',
 		redirectTo:
-			'/(accountTab:account/default//plannerTab:planner/default//statisticTab:statistic/default)',
+			'/(profileTab:profile/default//plannerTab:planner/default//statisticTab:statistic/default)',
 		pathMatch: 'full'
 	},
-
 	{
-		path: 'account',
+		path: 'profile',
 		component: NSEmptyOutletComponent,
 		loadChildren: () =>
 			import('~/app/account/account.module').then(m => m.AccountModule),
-		outlet: 'accountTab'
+		outlet: 'profileTab'
 	},
 	{
 		path: 'planner',

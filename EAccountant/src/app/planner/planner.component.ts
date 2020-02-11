@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GestureEventData } from 'tns-core-modules/ui/gestures';
-import { FinancialDataService } from '../shared/financialData.service';
+import { UserDataService } from '../shared/userData.service';
 import { Expense } from '../shared/models/expense.model';
 import { Subscription } from 'rxjs';
 import {
@@ -10,9 +10,11 @@ import {
 	inputType,
 	capitalizationType,
 	PromptResult,
-	action
+	action,
+	alert
 } from 'tns-core-modules/ui/dialogs';
-import { CategoryType } from '../shared/categoryType';
+import { CategoryType } from '../shared/models/categoryType';
+import { EventData } from 'tns-core-modules/data/observable/observable';
 
 @Component({
 	selector: 'ns-planner',
@@ -23,18 +25,18 @@ export class PlannerComponent implements OnInit, OnDestroy {
 	expenses: Expense[];
 	subscription: Subscription;
 
-	constructor(private financialDataService: FinancialDataService) {}
+	constructor(private userDataService: UserDataService) {}
 
 	ngOnInit() {
-		this.subscription = this.financialDataService.expensesChanged.subscribe(
+		this.subscription = this.userDataService.expensesChanged.subscribe(
 			(expenses: Expense[]) => {
 				this.expenses = expenses;
 			}
 		);
-		this.expenses = this.financialDataService.getExpenses();
+		this.expenses = this.userDataService.getExpenses();
 	}
 
-	onItemTap(index: number) {
+	onDoubleTap(index: number) {
 		let options = {
 			message: 'Are you sure you want to delete one of your expense points?',
 			okButtonText: 'Yes',
@@ -44,15 +46,20 @@ export class PlannerComponent implements OnInit, OnDestroy {
 		confirm(options).then((result: boolean) => {
 			if (result === true) {
 				// console.log(index);
-				this.financialDataService.deleteExpense(index);
+				this.userDataService.deleteExpense(index);
 			}
 		});
+	}
+
+	onItemTap(index: number) {
+		this.userDataService.changeImportance(index);
 	}
 
 	onAddExpense() {
 		let name: string;
 		let category: CategoryType;
 		let sum: number;
+		let importance: boolean;
 
 		let options: PromptOptions = {
 			title: 'Expense point name:',
@@ -107,11 +114,45 @@ export class PlannerComponent implements OnInit, OnDestroy {
 						sum = +response.text;
 					}
 
-					const expense = new Expense(name, category, sum);
-					this.financialDataService.addExpense(expense);
+					let options = {
+						message: 'Is this expense point important?',
+						okButtonText: 'Yes',
+						cancelButtonText: 'No'
+					};
+
+					confirm(options).then((result: boolean) => {
+						if (result === true) {
+							importance = true;
+						} else {
+							false;
+						}
+						const expense = new Expense(name, category, sum, importance);
+						this.userDataService.addExpense(expense);
+
+						if (
+							this.userDataService.expensesSum > this.userDataService.income
+						) {
+							let options = {
+								title: 'You have run out of money!',
+								message: 'Amount of money you spend is bigger than your income',
+								okButtonText: 'OK'
+							};
+							alert(options);
+						}
+					});
 				});
 			});
 		});
+	}
+
+	onHowToUse() {
+		let options = {
+			title: 'Usage Notes',
+			message:
+				' Tap once on expense item to mark it as important(makes it bold);\n Tap twice on expense item to delete it;\n Tap on "Add expense point" button to add expense item;',
+			okButtonText: 'OK'
+		};
+		alert(options);
 	}
 
 	ngOnDestroy() {

@@ -2,42 +2,40 @@
 	<Label text="Expenses planner"></Label>
 </ActionBar>
 
-<GridLayout rows="*,auto">
-	<ListView [items]="expenses" col="0" row="0">
+<GridLayout rows="*,10*,auto">
+	<GridLayout row="0" columns="*,*,*" class="bold bg-primary">
+		<Label text="Name" col="0"></Label>
+		<Label text="Category" col="1"></Label>
+		<Label text="Sum" col="2"></Label>
+	</GridLayout>
+	<ListView [items]="expenses" row="1">
 		<ng-template let-expense="item" let-i="index">
-			<GridLayout columns="*,*,*,*" rows="auto" (tap)="onItemTap(i)">
-				<Label
-					[text]="expense.name"
-					col="0"
-					row="0"
-					textAlignment="center"
-				></Label>
-				<Label
-					[text]="expense.category"
-					col="1"
-					row="0"
-					textAlignment="center"
-				></Label>
-				<Label
-					[text]="expense.sum"
-					col="2"
-					row="0"
-					textAlignment="center"
-				></Label>
-				<Switch
-					checked="false"
-					(checkedChange)="onCheckedChange($event)"
+			<GridLayout
+				columns="*,*,*"
+				rows="auto"
+				[ngClass]="{ bold: expense.importance === true }"
+				(tap)="onItemTap(i)"
+				(doubleTap)="onDoubleTap(i)"
+			>
+				<Label [text]="expense.name" col="0" row="0"></Label>
+				<Label [text]="expense.category" col="1" row="0"></Label>
+				<Label [text]="expense.sum" col="2" row="0"></Label>
+
+				<!-- <Switch
+					[checked]="expense.importance"
+					(checkedChange)="onCheckedChange(i)"
 					col="3"
 					row="0"
-				></Switch>
+				></Switch> -->
 			</GridLayout>
 		</ng-template>
 	</ListView>
-	<Button
-		text="Add expense point"
-		(tap)="onAddExpense()"
-		class="-primary"
-		col="0"
-		row="1"
-	></Button>
+	<StackLayout row="2">
+		<Button
+			text="Add expense point"
+			(tap)="onAddExpense()"
+			class="-primary"
+		></Button>
+		<Button text="How to use" (tap)="onHowToUse()" class="-primary"></Button>
+	</StackLayout>
 </GridLayout>

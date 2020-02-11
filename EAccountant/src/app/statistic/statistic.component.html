@@ -1,1 +1,58 @@
-<Button text="statistic works!" class="btn btn-primary"></Button>
+<ActionBar>
+	<Label text="Statistic"></Label>
+</ActionBar>
+
+<GridLayout rows="2*,*,auto">
+	<RadPieChart allowAnimation="true" row="0">
+		<PieSeries
+			tkPieSeries
+			selectionMode="DataPoint"
+			expandRadius="0.4"
+			outerRadiusFactor="0.7"
+			valueProperty="sum"
+			legendLabel="category"
+			showLabels="true"
+			[items]="statisticData"
+		>
+		</PieSeries>
+
+		<RadLegendView
+			tkPieLegend
+			position="Right"
+			title="Expenses categories"
+			offsetOrigin="TopRight"
+			width="130"
+			enableSelection="true"
+		></RadLegendView>
+	</RadPieChart>
+
+	<GridLayout columns="*,*" rows="*,*,*" row="1" class="info">
+		<Label
+			text="Income:"
+			textTransform="uppercase"
+			col="0"
+			row="0"
+			color="blue"
+		></Label>
+		<Label [text]="income" col="1" row="0" color="blue"></Label>
+
+		<Label
+			text="Expenses:"
+			textTransform="uppercase"
+			col="0"
+			row="1"
+			color="red"
+		></Label>
+		<Label [text]="expensesTotal" col="1" row="1" color="red"></Label>
+
+		<Label text="Result:" textTransform="uppercase" col="0" row="2"></Label>
+		<Label [text]="income - expensesTotal" col="1" row="2"></Label>
+	</GridLayout>
+
+	<Button
+		text="Get financial advice"
+		(tap)="onGetAdvice()"
+		class="-primary"
+		row="2"
+	></Button>
+</GridLayout>

@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { dbAccessPoint } from './shared/dbAccessPoint';
+import { User } from './shared/models/user.model';
+import { UserDataService } from './shared/userData.service';
 
 @Component({
 	selector: 'ns-app',
